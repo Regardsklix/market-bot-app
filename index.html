@@ -6,9 +6,10 @@
     <title>🎁 Маркет Бот - Инвентарь</title>
     <style>
         :root {
-            --primary-color: #6a11cb;
-            --secondary-color: #2575fc;
-            --accent-color: #ff6b6b;
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #ff6b6b;
+            --gold: #ffd700;
         }
         
         * {
@@ -19,20 +20,21 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 100%;
             margin: 0 auto;
         }
         
+        /* Header */
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             padding: 20px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 20px;
@@ -40,21 +42,45 @@
         }
         
         .header h1 {
-            font-size: 28px;
+            font-size: 24px;
             margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
         
+        /* User Card */
         .user-card {
             background: rgba(255, 255, 255, 0.15);
             border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 25px;
+            padding: 18px;
+            margin-bottom: 20px;
         }
         
+        .user-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .user-name {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .user-balance {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--gold);
+        }
+        
+        /* Stats */
         .stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 25px;
         }
         
@@ -66,21 +92,33 @@
         }
         
         .stat-value {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: bold;
             margin-bottom: 5px;
         }
         
         .stat-label {
-            font-size: 14px;
-            opacity: 0.8;
+            font-size: 13px;
+            opacity: 0.9;
         }
         
-        .inventory-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
+        /* Inventory */
+        .inventory-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .items-container {
             margin-bottom: 30px;
+        }
+        
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
         }
         
         .item-card {
@@ -97,7 +135,7 @@
         }
         
         .item-emoji {
-            font-size: 40px;
+            font-size: 35px;
             margin-bottom: 10px;
         }
         
@@ -108,24 +146,36 @@
         }
         
         .item-value {
-            color: gold;
+            color: var(--gold);
             font-weight: bold;
             font-size: 12px;
         }
         
+        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 40px 20px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .empty-emoji {
-            font-size: 60px;
             margin-bottom: 20px;
         }
         
+        .empty-emoji {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+        
+        .empty-text {
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+        
+        .empty-subtext {
+            opacity: 0.7;
+            font-size: 14px;
+        }
+        
+        /* Actions */
         .actions {
             display: flex;
             flex-direction: column;
@@ -166,8 +216,20 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         
+        /* Gift Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .gift-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Responsive */
         @media (max-width: 768px) {
-            .inventory-grid {
+            .items-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
             
@@ -175,20 +237,35 @@
                 grid-template-columns: 1fr;
             }
         }
+        
+        @media (max-width: 480px) {
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
+        <!-- Header -->
         <div class="header">
-            <h1>🛍️ Маркет Бот</h1>
+            <h1><span class="gift-animation">🛍️</span> Маркет Бот</h1>
             <p>Ваша коллекция подарков</p>
         </div>
         
+        <!-- User Info -->
         <div class="user-card">
-            <h2 id="username">Загрузка...</h2>
-            <p id="user-id">ID: ...</p>
+            <div class="user-info">
+                <div>
+                    <div class="user-name" id="username">Загрузка...</div>
+                    <div id="user-handle"></div>
+                </div>
+                <div class="user-balance" id="user-balance">0 💰</div>
+            </div>
+            <div id="user-id">ID: ...</div>
         </div>
         
+        <!-- Stats -->
         <div class="stats">
             <div class="stat-card">
                 <div class="stat-value" id="total-items">0</div>
@@ -200,15 +277,18 @@
             </div>
         </div>
         
-        <h2 style="margin-bottom: 20px; text-align: center;">📦 Ваш инвентарь</h2>
-        
-        <div id="inventory-container" class="inventory-grid">
-            <!-- Предметы будут здесь -->
+        <!-- Inventory -->
+        <h2 class="inventory-title"><span>📦</span> Ваш инвентарь</h2>
+        <div class="items-container">
+            <div id="inventory-items" class="items-grid">
+                <!-- Items will be loaded here -->
+            </div>
         </div>
         
+        <!-- Actions -->
         <div class="actions">
-            <button class="btn btn-primary" onclick="refreshData()">
-                <span>🔄</span> Обновить данные
+            <button class="btn btn-primary" onclick="loadData()">
+                <span>🔄</span> Обновить
             </button>
             <button class="btn btn-secondary" onclick="sendGift()">
                 <span>🎁</span> Отправить подарок
@@ -220,12 +300,36 @@
     </div>
 
     <script>
-        // Получаем параметры из URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('user_id');
-        const username = urlParams.get('username');
+        // Telegram Web App initialization
+        function initTelegramWebApp() {
+            if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+                Telegram.WebApp.ready();
+                Telegram.WebApp.expand();
+                Telegram.WebApp.setBackgroundColor('#6a11cb');
+                Telegram.WebApp.setHeaderColor('#6a11cb');
+                
+                // Add Main Button
+                Telegram.WebApp.MainButton.setText("Открыть бота").show();
+                Telegram.WebApp.MainButton.onClick(() => {
+                    Telegram.WebApp.openTelegramLink("https://t.me/ваш_бот");
+                });
+                
+                return true;
+            }
+            return false;
+        }
         
-        // Демо-данные
+        // Get data from URL parameters
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                userId: params.get('user_id') || '123456789',
+                username: params.get('username') || 'user',
+                giftCode: params.get('gift_code')
+            };
+        }
+        
+        // Demo inventory data
         const demoItems = [
             { id: 1, name: "🎁 Обычный подарок", value: 10, date: "2024-01-15" },
             { id: 2, name: "💎 Редкий подарок", value: 50, date: "2024-01-14" },
@@ -233,45 +337,62 @@
             { id: 4, name: "👑 Легендарный подарок", value: 500, date: "2024-01-12" }
         ];
         
-        // Инициализация Telegram Web App
-        function initTelegramWebApp() {
+        // Load user data
+        function loadUserData() {
+            const params = getUrlParams();
+            
+            // If in Telegram Web App, get user from Telegram
             if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-                Telegram.WebApp.ready();
-                Telegram.WebApp.expand();
-                
-                // Устанавливаем цвета
-                Telegram.WebApp.setBackgroundColor('#6a11cb');
-                Telegram.WebApp.setHeaderColor('#6a11cb');
-                
-                // Показываем основную кнопку
-                Telegram.WebApp.MainButton.setText("Открыть бота").show();
-                Telegram.WebApp.MainButton.onClick(() => {
-                    Telegram.WebApp.openTelegramLink("https://t.me/your_bot_username");
-                });
-                
-                // Получаем данные пользователя из Telegram
                 const tgUser = Telegram.WebApp.initDataUnsafe.user;
                 if (tgUser) {
-                    document.getElementById('username').textContent = 
-                        `@${tgUser.username || 'user'} | ${tgUser.first_name || 'Пользователь'}`;
+                    document.getElementById('username').textContent = tgUser.first_name || 'Пользователь';
+                    document.getElementById('user-handle').textContent = tgUser.username ? `@${tgUser.username}` : '';
                     document.getElementById('user-id').textContent = `ID: ${tgUser.id}`;
+                    
+                    // Load balance from cloud storage
+                    Telegram.WebApp.CloudStorage.getItem('balance', (err, value) => {
+                        if (value) {
+                            document.getElementById('user-balance').textContent = `${value} 💰`;
+                        }
+                    });
+                    
+                    // Load inventory from cloud storage
+                    Telegram.WebApp.CloudStorage.getItem('inventory', (err, value) => {
+                        if (value) {
+                            loadInventory(JSON.parse(value));
+                        } else {
+                            loadInventory(demoItems);
+                        }
+                    });
+                    
+                    return;
                 }
-                
-                return true;
             }
-            return false;
+            
+            // If not in Telegram, use URL parameters
+            document.getElementById('username').textContent = params.username;
+            document.getElementById('user-handle').textContent = params.userId ? `ID: ${params.userId}` : '';
+            document.getElementById('user-id').textContent = `ID: ${params.userId}`;
+            
+            // Check for gift code
+            if (params.giftCode) {
+                claimGift(params.giftCode, params.userId);
+            }
+            
+            // Load demo inventory
+            loadInventory(demoItems);
         }
         
-        // Загрузка инвентаря
-        function loadInventory() {
-            const container = document.getElementById('inventory-container');
+        // Load inventory
+        function loadInventory(items) {
+            const container = document.getElementById('inventory-items');
             
-            if (!demoItems || demoItems.length === 0) {
+            if (!items || items.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-emoji">📭</div>
-                        <h3>Инвентарь пуст</h3>
-                        <p>Отправляйте и получайте подарки!</p>
+                        <div class="empty-text">Инвентарь пуст</div>
+                        <div class="empty-subtext">Отправляйте и получайте подарки!</div>
                     </div>
                 `;
                 
@@ -280,50 +401,80 @@
                 return;
             }
             
-            // Очищаем контейнер
+            // Clear container
             container.innerHTML = '';
             
-            // Добавляем предметы
+            // Add items
             let totalValue = 0;
             
-            demoItems.forEach(item => {
+            items.forEach((item, index) => {
                 const itemElement = document.createElement('div');
                 itemElement.className = 'item-card';
+                
+                // Determine emoji
+                let emoji = "🎁";
+                if (item.name.includes("Редкий")) emoji = "💎";
+                if (item.name.includes("Эпический")) emoji = "🔥";
+                if (item.name.includes("Легендарный")) emoji = "👑";
+                
                 itemElement.innerHTML = `
-                    <div class="item-emoji">${item.name.split(' ')[0]}</div>
+                    <div class="item-emoji">${emoji}</div>
                     <div class="item-name">${item.name}</div>
                     <div class="item-value">${item.value} 💰</div>
                 `;
-                container.appendChild(itemElement);
                 
+                // Add animation for new items
+                if (index < 3) {
+                    itemElement.style.animation = 'pulse 2s infinite';
+                }
+                
+                container.appendChild(itemElement);
                 totalValue += item.value;
             });
             
-            // Обновляем статистику
-            document.getElementById('total-items').textContent = demoItems.length;
+            // Update stats
+            document.getElementById('total-items').textContent = items.length;
             document.getElementById('total-value').textContent = totalValue;
+            
+            // Update balance if in Telegram
+            if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+                document.getElementById('user-balance').textContent = `${totalValue} 💰`;
+                Telegram.WebApp.CloudStorage.setItem('balance', totalValue.toString());
+                Telegram.WebApp.CloudStorage.setItem('inventory', JSON.stringify(items));
+            }
         }
         
-        // Если нет данных из Telegram, используем данные из URL
-        function loadUserData() {
-            if (userId) {
-                document.getElementById('user-id').textContent = `ID: ${userId}`;
+        // Claim gift function
+        function claimGift(giftCode, userId) {
+            // In a real app, you would make an API call here
+            console.log(`Claiming gift ${giftCode} for user ${userId}`);
+            
+            // Show success message
+            if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
+                Telegram.WebApp.showAlert(`🎉 Подарок получен!\nКод: ${giftCode}`);
+            } else {
+                alert(`🎉 Подарок получен!\nКод: ${giftCode}`);
             }
             
-            if (username) {
-                document.getElementById('username').textContent = `@${username}`;
-            } else if (!initTelegramWebApp()) {
-                document.getElementById('username').textContent = 'Гость';
-            }
+            // Add new gift to inventory
+            const newItem = {
+                id: Date.now(),
+                name: "🎁 Новый подарок",
+                value: 100,
+                date: new Date().toISOString().split('T')[0]
+            };
+            
+            const currentItems = [...demoItems, newItem];
+            loadInventory(currentItems);
         }
         
-        // Функции управления
-        function refreshData() {
-            loadInventory();
+        // Action functions
+        function loadData() {
+            loadUserData();
             if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
-                Telegram.WebApp.showAlert('Данные обновлены!');
+                Telegram.WebApp.showAlert('✅ Данные обновлены!');
             } else {
-                alert('Данные обновлены!');
+                alert('✅ Данные обновлены!');
             }
         }
         
@@ -331,7 +482,7 @@
             if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
                 Telegram.WebApp.close();
                 setTimeout(() => {
-                    Telegram.WebApp.openTelegramLink("https://t.me/your_bot_username?start=send_gift");
+                    Telegram.WebApp.openTelegramLink("https://t.me/ваш_бот?start=send_gift");
                 }, 300);
             } else {
                 alert('Откройте в Telegram для отправки подарков');
@@ -342,15 +493,22 @@
             if (typeof Telegram !== 'undefined' && Telegram.WebApp) {
                 Telegram.WebApp.close();
             } else {
-                // Для браузера просто обновляем
-                location.reload();
+                // For browser testing
+                window.close();
             }
         }
         
-        // Инициализация при загрузке
+        // Initialize on load
         document.addEventListener('DOMContentLoaded', () => {
+            initTelegramWebApp();
             loadUserData();
-            loadInventory();
+        });
+        
+        // Listen for messages from bot (if using postMessage)
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'UPDATE_INVENTORY') {
+                loadInventory(event.data.items);
+            }
         });
     </script>
 </body>
